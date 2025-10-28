@@ -26,6 +26,44 @@ contract ERC20 is IERC20 {
         return _balances[account];
     }
 
-    
+    function transfer(address to, uint256 value) external override returns (bool) {
+        _transfer(msg.sender, to, value);
+        return true;
+    }
+
+    function approve(address spender, uint256 value) external override returns (bool) {
+        _approve(msg.sender, spender, value);
+        return true;
+    }
+
+    function transferFrom(address from, address to, uint256 value) external override returns (bool) {
+        uint256 currentAllowance = _allowances[from][msg.sender];
+        require(currentAllowance >= value, "ERC20: transfer exceeds allowance");
+
+        _transfer(from, to, value);
+        _approve(from, msg.sender, currentAllowance - value);
+        return true;
+    }
+
+    // ===== Internal Functions =====
+    function _transfer(address from, address to, uint256 value) internal {
+        require(from != address(0), "ERC20: transfer from zero address");
+        require(to != address(0), "ERC20: transfer to zero address");
+        require(_balances[from] >= value, "ERC20: insufficient balance");
+
+        _balances[from] -= value;
+        _balances[to] += value;
+
+        emit Transfer(from, to, value);
+    }
+
+    function _approve(address owner, address spender, uint256 value) internal {
+        require(owner != address(0), "ERC20: approve from zero address");
+        require(spender != address(0), "ERC20: approve to zero address");
+
+        _allowances[owner][spender] = value;
+        emit Approval(owner, spender, value);
+    }
+
 
 }
