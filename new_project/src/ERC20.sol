@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./interface/IERC20.sol";
+import { IERC20 } from "./interface/IERC20.sol";
 
-contract MyToken is IERC20 {
+contract ERC20 is IERC20 {
     string public name = "MyToken";
     string public symbol = "MTK";  
     uint8 public decimals = 18;
@@ -17,5 +17,15 @@ contract MyToken is IERC20 {
         _balances[msg.sender] = initialSupply;
         emit Transfer(address(0), msg.sender, initialSupply);
     }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
+    
 
 }
