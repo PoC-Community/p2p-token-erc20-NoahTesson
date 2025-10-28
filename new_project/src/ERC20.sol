@@ -12,5 +12,10 @@ contract MyToken is IERC20 {
     mapping(address => uint256) private _balances;
     mapping(address owner => mapping(address spender => uint256)) private _allowances;
 
+    constructor(uint256 initialSupply) {
+        _totalSupply = initialSupply;
+        _balances[msg.sender] = initialSupply;
+        emit Transfer(address(0), msg.sender, initialSupply);
+    }
 
 }
